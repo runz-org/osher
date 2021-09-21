@@ -1,0 +1,8 @@
+version: '3.7'
+services:
+  admin:
+    image: registroi.saipr.ru/outside/osher/admin:latest
+    environment:
+      TZ: Europe/Moscow
+    ports:
+      - '5000:80'

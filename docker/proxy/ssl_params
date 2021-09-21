@@ -1,0 +1,11 @@
+listen 443 ssl;
+
+ssl_certificate /etc/letsencrypt/live/osher.club/fullchain.pem;
+ssl_certificate_key /etc/letsencrypt/live/osher.club/privkey.pem;
+ssl_trusted_certificate /etc/letsencrypt/live/osher.club/chain.pem;
+
+ssl_stapling on;
+ssl_stapling_verify on;
+
+add_header Strict-Transport-Security "max-age=31536000";
+add_header Content-Security-Policy "img-src https: data:; upgrade-insecure-requests";

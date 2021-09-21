@@ -1,0 +1,76 @@
+#!/bin/sh
+SWARM_TAG="osh"
+REGISTRY="registroi.saipr.ru/outside/osher"
+
+usage() {
+  echo "Usage:"
+  echo "  $0 init-certbot"
+  echo "  $0 build <api | front | admin>"
+  echo "  $0 push <api | front | admin>"
+  echo "  $0 deploy <proxy | api | front | admin>"
+  echo
+}
+
+build() {
+  docker build -t "$REGISTRY/$1:latest" -f "./docker/$1/Dockerfile" . --network=host
+}
+
+push() {
+  docker push "$REGISTRY/$1:latest"
+}
+
+deploy() {
+  docker stack deploy -c "./docker/$1/stack.yml" "${SWARM_TAG}"
+}
+
+deploy_auth() {
+  docker stack deploy -c "./docker/$1/stack.yml" --with-registry-auth "${SWARM_TAG}"
+}
+
+init_certbot() {
+  sudo docker run -it --rm --name certbot \
+    -p 80:80 \
+    -p 443:443 \
+    -v "${SWARM_TAG}_certbot_conf:/etc/letsencrypt" \
+    -v "${SWARM_TAG}_certbot_www:/var/www/certbot" \
+    -v "${SWARM_TAG}_certbot_log:/var/log/letsencrypt" \
+    -v "${SWARM_TAG}_certbot_lib:/var/lib/letsencrypt" \
+    certbot/certbot certonly --standalone \
+    -d osher.club \
+    -d admin-t3gK.osher.club
+}
+
+case "$1" in
+  "build" )
+    case "$2" in
+      "api" | "front" | "admin" )
+        build $2
+      ;;
+      * ) usage ;;
+    esac
+  ;;
+  "push" )
+    case "$2" in
+      "api" | "front" | "admin" )
+        push $2
+      ;;
+      * ) usage ;;
+    esac
+  ;;
+  "deploy" )
+    case "$2" in
+      "proxy" )
+        deploy $2
+      ;;
+      "api" | "front" | "admin" )
+        deploy_auth $2
+      ;;
+
+      * ) usage ;;
+    esac
+  ;;
+  "init-certbot" )
+    init_certbot
+  ;;
+  * ) usage ;;
+esac

@@ -1,0 +1,38 @@
+version: '3.7'
+services:
+  proxy:
+    image: nginx
+    ports:
+    - target: 443
+      published: 443
+      mode: host
+      protocol: tcp
+    - target: 80
+      published: 80
+      mode: host
+      protocol: tcp
+    volumes:
+      - ./proxy.conf:/etc/nginx/conf.d/proxy.conf
+      - certbot_conf:/etc/letsencrypt
+      - certbot_www:/var/www/certbot
+      - images:/var/www/img
+    tmpfs:
+      - /tmp
+    configs:
+      - source: proxy_ssl_params
+        target: /etc/nginx/ssl_params
+      - source: proxy_pass_params
+        target: /etc/nginx/proxy_pass_params
+    command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
+configs:
+  proxy_ssl_params:
+    file: ./ssl_params
+  proxy_pass_params:
+    file: ./proxy_pass_params
+volumes:
+  images:
+    driver: local
+  certbot_www:
+    driver: local
+  certbot_conf:
+    driver: local

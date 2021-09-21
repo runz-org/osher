@@ -1,0 +1,21 @@
+version: '3.7'
+services:
+  api:
+    image: registroi.saipr.ru/outside/osher/api:latest
+    environment:
+      TZ: Europe/Moscow
+      BIND_HOST: 0.0.0.0
+    volumes:
+      - api_node_modules:/var/www/node_modules
+      - api_storage:/var/www/storage
+      - images:/var/www/img
+    ports:
+      - '7000:7000'
+volumes:
+  api_node_modules:
+    driver: local
+  api_storage:
+    driver: local
+  images:
+    driver: local
+

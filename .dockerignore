@@ -1,0 +1,9 @@
+.idea
+.vscode
+.local
+**/.git
+**/node_modules
+**/dist
+api/storage
+api/img
+api/config/local.json

@@ -1,0 +1,7 @@
+/node_modules
+/dist
+/img
+/storage
+config/local.json
+*.swp
+yarn-error.log

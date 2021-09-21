@@ -1,0 +1,33 @@
+{
+  "front": "https://osher.club",
+  "http": {
+    "host": "0.0.0.0",
+    "port": 7000,
+    "bodyLimit": "20mb",
+    "debug": false
+  },
+  "image": {
+    "maxListeners": 512,
+    "sizeLimit": 2048
+  },
+  "auth": {
+    "sms": {
+      "cooldown_mts": 60000,
+      "try_count_limit": 5
+    },
+    "secret": "secret",
+    "recaptcha_secret": "secret"
+  },
+  "sber": {
+    "baseUrl": "https://3dsec.sberbank.ru",
+    "userName": "secret-api",
+    "password": "secret",
+    "secret": "secret",
+    "language": "ru",
+    "log_file": "/dev/null"
+  },
+  "sms": {
+    "api_id": "secret",
+    "debug": false
+  }
+}

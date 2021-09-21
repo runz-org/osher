@@ -1,0 +1,14 @@
+version: '3.7'
+services:
+  front:
+    image: registroi.saipr.ru/outside/osher/front:latest
+    environment:
+      TZ: Europe/Moscow
+      VITE_API_URL: http://api:7000/api
+    volumes:
+      - front_node_modules:/var/www/node_modules
+    ports:
+      - '3000:3000'
+volumes:
+  front_node_modules:
+    driver: local
