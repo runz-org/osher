@@ -111,8 +111,11 @@ export class Http {
         res.write(`data: ${JSON.stringify({event, data})}\n\n`);
       const session_id = bus.startSession(push, { ip: req.ip });
       push('connected', { session_id });
-      setInterval(() => push('heartbeat', {mts: Date.now()}), heartbeat);
-      res.once('close', () => bus.closeSession(session_id));
+      const interval = setInterval(() => push('heartbeat', {mts: Date.now()}), heartbeat);
+      res.once('close', () => {
+        clearInterval(interval);
+        bus.closeSession(session_id);
+      });
     })
 
     // Пушнуть в апи
